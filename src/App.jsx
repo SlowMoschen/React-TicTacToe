@@ -95,6 +95,7 @@ function App() {
 
       if(winner) { 
         console.log(currentPlayers);
+        // If no Playernames are choosen - Cirlce/Cross will be rendered
         roundMessage = currentPlayers.length === 0 ? `${currentPlayer} won this Round` : `${currentPlayers[winner === 'circle' ? 0 : 1]} won this Round`
         circleWins += winner === 'circle' ? 1 : 0
         crossWins += winner === 'cross' ? 1 : 0
