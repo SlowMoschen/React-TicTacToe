@@ -15,10 +15,10 @@ function App() {
   // Logic to get wich PLayers turn it is
   const [isCircleTurn, setIsCircleTurn] = useState(true)
 
-  // Dependecie for the Reset-Board Button wich will be renderd if the Game is won or a draw occures
+  // Dependecie for the Reset-Board Button wich will be renderd if the Game is won or a draw occurs
   const [isActive, setIsActive] = useState(false)
 
-  // Board will be disabled if the game is won or a draw occures
+  // Board will be disabled if the game is won or a draw occurs
   const [isBoardDisabled, setIsBoardDisabled] = useState(false)
 
   // Counts for keeping track of wins from the players
@@ -32,7 +32,7 @@ function App() {
   const [cells, setCells] = useState(Array(9).fill(""))
 
   // Outputs the correct Player
-  const currentPlayer = isCircleTurn ? currentPlayers[0] : currentPlayers[1]
+  const currentPlayer = isCircleTurn ? currentPlayers[0] || 'Circle' : currentPlayers[1] || 'Cross'
 
   // Contant for the Message - Outputs the set winningMessage or wich Players turn it is
   const message = winningMessage || `Turn: ${currentPlayer}` 
@@ -48,6 +48,13 @@ function App() {
       e.preventDefault()
       const p1 = document.querySelector('#p1')
       const p2 = document.querySelector('#p2')
+      
+      // If the player choose not to set Playernames - set Default values of circle/cross
+      if(p1.value === "" && p2.value === ""){
+        setCurrentPlayers(['circle', 'cross'])
+        setIsGameReady(true)
+        return
+      }
       
       setCurrentPlayers([p1.value, p2.value])
       setIsGameReady(true)
@@ -70,12 +77,16 @@ function App() {
       [0, 4, 8]
     ]
 
+    // When all cells got a Class and no Winner was found it is Draw
     const isDraw = cells.every(cell => cell !== '')
+    
+    // Combo = Index to check - If Index1 is not empty & Index 1 does equal Index2 & Index2 equals Index3 - a winner was found 
     const findWinner = winningCombos.find(
-      combo => cells[combo[0]] !== '' &&
-               cells[combo[0]] === cells[combo[1]] &&
-               cells[combo[1]] === cells[combo[2]]
+      combo =>  cells[combo[0]] !== '' 
+                && cells[combo[0]] === cells[combo[1]] 
+                && cells[combo[1]] === cells[combo[2]]
     );
+    // returns the winner class
     const winner = findWinner ? cells[findWinner[0]] : null
 
     let roundMessage = ''
@@ -83,7 +94,8 @@ function App() {
     let crossWins = crossCount
 
       if(winner) { 
-        roundMessage = `${currentPlayers[winner === 'circle' ? 0 : 1]} won this Round`
+        console.log(currentPlayers);
+        roundMessage = currentPlayers.length === 0 ? `${currentPlayer} won this Round` : `${currentPlayers[winner === 'circle' ? 0 : 1]} won this Round`
         circleWins += winner === 'circle' ? 1 : 0
         crossWins += winner === 'cross' ? 1 : 0
         setIsActive(true)
@@ -151,8 +163,8 @@ function App() {
         {isActive ? <button className='restart-btn' onClick={() => { resetGame() }}>Reset Board</button> : ""}
         <h1>Tic Tac Toe</h1>
           <div className='count-display'>{countDisplay}</div>
-          <div className='message-display'><span>{message}</span></div>
-          {/* Gameboard will be disabled if win/draw occures */}
+          <div className='message-display'>{message}</div>
+          {/* Gameboard will be disabled if win/draw occurs */}
         <div className={`gameboard ${isBoardDisabled ? 'disabled' : ''}`}>
           {cells.map((cell, index) => {
             return <Cell 

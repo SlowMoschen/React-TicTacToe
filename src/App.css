@@ -93,9 +93,6 @@ h1 {
     position: absolute;
     top: 38%;
     font-size: 20px;
-}
-
-.message-display > span { 
     text-transform: capitalize;
 }
 
