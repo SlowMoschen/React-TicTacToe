@@ -1,5 +1,6 @@
 export default function Cell({id, isCircleTurn, setIsCircleTurn, cells, setCells }) {
 
+    // Handles Click on Cell - sets eiher Cirlce or Cross Class
     const handleClick = (e) => {
         const clickedCell = e.currentTarget.firstChild
         const isTaken = clickedCell.classList.contains('circle') || clickedCell.classList.contains('cross')
@@ -15,6 +16,7 @@ export default function Cell({id, isCircleTurn, setIsCircleTurn, cells, setCells
 
     }
 
+    // Updates the Cells array
     const setCellsState = (currentSymbol) => {
         const changedCell = cells.map((cell, index) => {
             if(index === id) {
@@ -26,6 +28,7 @@ export default function Cell({id, isCircleTurn, setIsCircleTurn, cells, setCells
         setCells(changedCell)
     }
 
+    // returns a Cell
     return (
         <>
             <div className="cell" onClick={(e) => { handleClick(e) }}>

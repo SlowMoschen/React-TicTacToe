@@ -1,24 +1,49 @@
+// Import Dependencies
 import { useEffect, useState } from 'react'
 import Cell from './components/Cell'
 import './App.css'
 
 function App() {
 
+  // useState Dependencies
+  // sets currentPlayer choosen by User in the beginning of game
   const [currentPlayers, setCurrentPlayers] = useState([])
+
+  // will be set true when Players are set
   const [isGameReady, setIsGameReady] = useState(false)
+
+  // Logic to get wich PLayers turn it is
   const [isCircleTurn, setIsCircleTurn] = useState(true)
+
+  // Dependecie for the Reset-Board Button wich will be renderd if the Game is won or a draw occures
   const [isActive, setIsActive] = useState(false)
+
+  // Board will be disabled if the game is won or a draw occures
   const [isBoardDisabled, setIsBoardDisabled] = useState(false)
+
+  // Counts for keeping track of wins from the players
   const [crossCount, setCrossCount] = useState(0)
   const [circleCount, setCircleCount] = useState(0)
+
+  // Dependecie for setting the winning/draw Text
   const [winningMessage, setWinningMessage] = useState("")
+
+  // Dependencie for the Gameboard - to keep track wich cells are taken already and check a win
   const [cells, setCells] = useState(Array(9).fill(""))
 
+  // Outputs the correct Player
   const currentPlayer = isCircleTurn ? currentPlayers[0] : currentPlayers[1]
+
+  // Contant for the Message - Outputs the set winningMessage or wich Players turn it is
   const message = winningMessage || `Turn: ${currentPlayer}` 
+
+  // Scoreboard to keep track of wins
   const countDisplay = `${currentPlayers[0] || 'Circle'} Wins: ${circleCount} || ${currentPlayers[1] || 'Cross'} Wins: ${crossCount}`
 
+  // Handles the Form submit on the start of the game
   const handleSubmit = (e) => {
+
+    // sets the choosen Playernames
     const setPlayers = () => {
       e.preventDefault()
       const p1 = document.querySelector('#p1')
@@ -32,6 +57,7 @@ function App() {
     return
   }
 
+  // function to check if a win or draw occured
   const checkWin = () => {
     const winningCombos = [
       [0, 1, 2],
@@ -76,10 +102,12 @@ function App() {
     return
   }
   
+  // checkWin will be called each time the Cells Array changes
   useEffect(() => {
     checkWin()
   }, [cells])
 
+  // helper function to clear the Gameboard of the symbols
   const clearClassNames = () => {
     const choosenElements = document.querySelectorAll('.choosen-symbol')
     choosenElements.forEach(el => {
@@ -88,6 +116,7 @@ function App() {
     })
   }
 
+  // Function that resets all dependecies for a new game
   const resetGame = () => {
     setIsCircleTurn(true)
     setWinningMessage('')
@@ -97,6 +126,7 @@ function App() {
     setIsBoardDisabled(false)
   }
 
+  // Returns either the Startscreen with the SetPlayers Form or the Gameboard
   return (
 
     !isGameReady 
@@ -117,10 +147,12 @@ function App() {
         </div>
         : 
         <div className='app'>
+          {/* if isAcitve is true the button will be rendered */}
         {isActive ? <button className='restart-btn' onClick={() => { resetGame() }}>Reset Board</button> : ""}
         <h1>Tic Tac Toe</h1>
           <div className='count-display'>{countDisplay}</div>
           <div className='message-display'><span>{message}</span></div>
+          {/* Gameboard will be disabled if win/draw occures */}
         <div className={`gameboard ${isBoardDisabled ? 'disabled' : ''}`}>
           {cells.map((cell, index) => {
             return <Cell 
